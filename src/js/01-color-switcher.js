@@ -1,6 +1,6 @@
 const startButton = document.querySelector("[data-start]")
 const stopButton = document.querySelector("[data-stop]")
-let checkFunction = false;
+let timerId = null;
 startButton.addEventListener("click", changeColor)
 stopButton.addEventListener("click", stopChangeColor)
 function getRandomHexColor() {
