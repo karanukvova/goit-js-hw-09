@@ -18,7 +18,7 @@ flatpickr(input, {
     onClose(selectedDates, dateStr) {
         today = Date.now()
         currentDay = new Date(dateStr)
-    if (today > currentDay) {
+    if (today >= currentDay) {
         Notiflix.Notify.failure("Please choose a date in the future")
         startButton.disabled = true;
     } else {
@@ -26,18 +26,24 @@ flatpickr(input, {
     }
   },
 })
-startButton.addEventListener("click", (() => {
-  startButton.disabled = true;
-  setInterval(() => {
+startButton.addEventListener("click", updateFaceClock)
+  function updateFaceClock(){
+    startButton.disabled = true;
+    input.disabled = true
+    const idInterval = setInterval(() => {
     today = Date.now()
     const time = currentDay - today
     const convert = convertMs(time)
-    days.textContent = convert.days
-    hours.textContent = convert.hours
-    minutes.textContent = convert.minutes
-    seconds.textContent = convert.seconds
+    const addZero = addLeadingZero(convert)
+    days.textContent = addZero.days
+    hours.textContent = addZero.hours
+    minutes.textContent = addZero.minutes
+    seconds.textContent = addZero.seconds
+    if (addZero.days == "00" & addZero.hours == "00" & addZero.minutes == "00" & addZero.seconds == "00") {
+      clearInterval(idInterval)
+    }
   },1000)
-}))
+  }
 function convertMs(ms) {
   // Number of milliseconds per unit of time
   const second = 1000;
@@ -55,4 +61,11 @@ function convertMs(ms) {
   const seconds = Math.floor((((ms % day) % hour) % minute) / second);
 
   return { days, hours, minutes, seconds };
+}
+function addLeadingZero({ days, hours, minutes, seconds }) {
+  days = days.toString().padStart(2, "0")
+  hours = hours.toString().padStart(2, "0")
+  minutes = minutes.toString().padStart(2, "0")
+  seconds = seconds.toString().padStart(2, "0")
+  return { days, hours, minutes, seconds }
 }

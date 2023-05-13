@@ -18,8 +18,8 @@ form.addEventListener('submit', (event) => {
   const delay = parseInt(form.elements.delay.value);
   const step = parseInt(form.elements.step.value);
   const amount = parseInt(form.elements.amount.value);
-
-  for (let i = 0; i < amount; i++) {
+  if (delay > 0 & step > 0 & amount >= 0) {
+    for (let i = 0; i < amount; i++) {
     const position = i + 1;
     const promiseDelay = delay + i * step;
     createPromise(position, promiseDelay)
@@ -29,5 +29,8 @@ form.addEventListener('submit', (event) => {
       .catch(({ position, delay }) => {
         Notiflix.Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
       });
+  }
+  } else {
+    Notiflix.Notify.failure(`Усі значення мають бути додатні`)
   }
 });
